@@ -86,6 +86,8 @@ class MyStreamListener(tweepy.StreamListener):
 myStreamListener = MyStreamListener()
 myStream = tweepy.Stream(auth=api.auth, listener=myStreamListener)
 
-myStream.filter(track=['workout', 'running'], async=True)
-myStream.filter(locations=[-73.9857679522,40.7623129194,-73.9449816737,40.8019975756])
+keywords = [u'workout', u'running', u'Endomondo', u'endorphins', u'run', u'running', u'parkrun', u'morningrun', u'jog',
+            u'jogging', u'walking', u'walk', u'walkies', u'ride', u'cycling']
+myStream.filter(track=keywords)
+myStream.filter(locations=[-73.9857679522,40.7623129194,-73.9449816737,40.8019975756], async=True)
 conn.close()
