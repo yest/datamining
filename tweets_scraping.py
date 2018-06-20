@@ -6,10 +6,10 @@ import re
 import pickle
 import pymysql.cursors
 
-consumer_key = 'bVQ5q2dG72dlEicthv6zCaU8B'
-consumer_secret = 'DKcOptyFqRNeRXEU2zycjOAdxMRVWr28MfbjNsCYAIlarY4pVm'
-access_token = '970426124512632832-I4xlYipBghLUAu6tGbZqNgL8zWrwxD6'
-access_secret = 'E4jbd80Exh9il5n4nYcpSxNoUmJgc3fuW61ADNF36Sxgb'
+consumer_key = 'XbVQ5q2dG72dlEicthv6zCaU8B'
+consumer_secret = 'DKcOptyFqRNeRXEU2zycjOAdxMRVWr28MfbjNsCYAIlarY4pVmX'
+access_token = 'X970426124512632832-I4xlYipBghLUAu6tGbZqNgL8zWrwxD6'
+access_secret = 'E4jbd80Exh9il5n4nYcpSxNoUmJgc3fuW61ADNF36SxgbX'
 
 auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
