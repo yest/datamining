@@ -29,6 +29,14 @@ with open('tfidfmodel.pickle', 'rb') as f:
 with open('classifier_svm.pickle', 'rb') as f:
     clf = pickle.load(f)
 
+parkname = 'Central Park'
+location = [-73.9817503577, 40.7649522867, -73.9496211749, 40.8008585051]
+keywords = {'workout': ['workout', 'running', 'walking', 'run', 'parkrun', 'jog', 'jogging', 'walk', 'walking', 'ride',
+                        'cycling'],
+            'socializing': ['relax', 'relaxing', 'meditation', 'reading', 'lunch', 'chill', 'mindfulness', 'yoga'],
+            'relaxation': ['meetup', 'wedding', 'bbq', 'picnic', 'catchup', 'friends', 'festival', 'hangout', 'party',
+                           'birthday']}
+
 
 # override tweepy.StreamListener
 class MyStreamListener(tweepy.StreamListener):
@@ -36,23 +44,30 @@ class MyStreamListener(tweepy.StreamListener):
     def on_status(self, status):
         if 'RT @' not in status.text:
             tweet = self.preprocess(status.text)
-            # print(status.text, " : ", self.predict(tweet))
-            try:
-                x.execute("""INSERT INTO tweets(text, date, sentiment) VALUES (%s,%s,%s)""",
-                          (status.text, str(status.created_at), int(self.predict(tweet))))
-                conn.commit()
-            except:
-                conn.rollback()
+            keyword = self.check_keyword(tweet)
+            if keyword:
+                print(status.text, " : ", self.predict(tweet))
+                print(tweet, " : ", self.predict(tweet))
+                print('=================================================')
+                print(keyword)
+                try:
+                    x.execute(
+                        """INSERT INTO tweets(text, date, sentiment, parkname, location, keyword)
+                              VALUES (%s,%s,%s,%s,%s,%s)""",
+                        (tweet, str(status.created_at), int(self.predict(tweet)), parkname, str(location), keyword))
+                    conn.commit()
+                except:
+                    conn.rollback()
 
     def on_error(self, status_code):
         if status_code == 420:
-            # returning False in on_data disconnects the stream
             return False
+
 
     def preprocess(self, tweet):
         tweet = re.sub(r"^https://t.co/[a-zA-Z0-9]*\s", " ", tweet)
         tweet = re.sub(r"\s+https://t.co/[a-zA-Z0-9]*\s", " ", tweet)
-        tweet = re.sub(r"\s+https://t.co/[a-zA-Z0-9]*\s", " ", tweet)
+        tweet = re.sub(r"http\S+", " ", tweet)
         tweet = tweet.lower()
         tweet = re.sub(r"that's", "that is", tweet)
         tweet = re.sub(r"there's", "there is", tweet)
@@ -73,7 +88,7 @@ class MyStreamListener(tweepy.StreamListener):
         tweet = re.sub(r"won't", "will not", tweet)
         tweet = re.sub(r"\W", " ", tweet)
         tweet = re.sub(r"\d", " ", tweet)
-        tweet = re.sub(r"s+[a-z]\s", " ", tweet)
+        tweet = re.sub(r"\s+[a-z]\s", " ", tweet)
         tweet = re.sub(r"\s+[a-z]$", " ", tweet)
         tweet = re.sub(r"^[a-z]\s+", " ", tweet)
         tweet = re.sub(r"\s+", " ", tweet)
@@ -82,12 +97,17 @@ class MyStreamListener(tweepy.StreamListener):
     def predict(self, tweet):
         return clf.predict(vectorizer.transform([tweet]).toarray())
 
+    def check_keyword(self, tweet):
+        for word in tweet.split():
+            for key, value in keywords.items():
+                if word in value:
+                    return key
+
 
 myStreamListener = MyStreamListener()
 myStream = tweepy.Stream(auth=api.auth, listener=myStreamListener)
+myStream.filter(locations=location,
+                async=True,
+                languages=["en"])
 
-keywords = [u'workout', u'running', u'Endomondo', u'endorphins', u'run', u'running', u'parkrun', u'morningrun', u'jog',
-            u'jogging', u'walking', u'walk', u'walkies', u'ride', u'cycling']
-myStream.filter(track=keywords)
-myStream.filter(locations=[-73.9857679522,40.7623129194,-73.9449816737,40.8019975756], async=True)
-conn.close()
+# conn.close()
