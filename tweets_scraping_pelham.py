@@ -6,10 +6,10 @@ import re
 import pickle
 import pymysql.cursors
 
-consumer_key = 'yZhST4KiWCP3yLZjCTDuVrdad'
-consumer_secret = 'MPZl06N2FH9bYLW82zpqj4TG37iUkDJ6YWWSO882zuHExQoAXM'
-access_token = '970426124512632832-cagtg9Xpe9w1ZI2o44LwZHQzTBt8U3U'
-access_secret = 'WQ4ibP3rbC94Ljk0isP9PzmlYaLHAcZdjTnst5RWAYWAf'
+consumer_key = '1xVcNar1YvWqKjpU88k7HyPbh'
+consumer_secret = 'LvSsX3I2IkGsg7lWhpoccrMiqemj0gpfvhobyWMQSMsPWGYr1Q'
+access_token = '970426124512632832-AULfDJ2NfhaV8mfrUFMyxGP4Lha1qD4'
+access_secret = 'J3zhlK3Kgi6MvaV5AImO9tRdkN8Lxm1kOWDaAYpeb2vT0'
 
 auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
@@ -29,8 +29,8 @@ with open('tfidfmodel.pickle', 'rb') as f:
 with open('classifier_svm.pickle', 'rb') as f:
     clf = pickle.load(f)
 
-parkname = 'Van Cortlandt Park'
-location = [-73.9057641969, 40.8814179494, -73.8689885307, 40.9112746603]
+parkname = 'Pelham Bay Park'
+location = [-73.8267176937,40.8459270955,-73.776764233,40.8887011171]
 keywords = {'workout': ['workout', 'running', 'walking', 'run', 'parkrun', 'jog', 'jogging', 'walk', 'walking', 'ride',
                         'cycling'],
             'socializing': ['relax', 'relaxing', 'meditation', 'reading', 'lunch', 'chill', 'mindfulness', 'yoga'],
@@ -63,6 +63,7 @@ class MyStreamListener(tweepy.StreamListener):
     def on_error(self, status_code):
         if status_code == 420:
             return False
+
 
     def preprocess(self, tweet):
         tweet = re.sub(r"^https://t.co/[a-zA-Z0-9]*\s", " ", tweet)

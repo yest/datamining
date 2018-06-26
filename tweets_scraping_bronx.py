@@ -6,10 +6,10 @@ import re
 import pickle
 import pymysql.cursors
 
-consumer_key = 'yZhST4KiWCP3yLZjCTDuVrdad'
-consumer_secret = 'MPZl06N2FH9bYLW82zpqj4TG37iUkDJ6YWWSO882zuHExQoAXM'
-access_token = '970426124512632832-cagtg9Xpe9w1ZI2o44LwZHQzTBt8U3U'
-access_secret = 'WQ4ibP3rbC94Ljk0isP9PzmlYaLHAcZdjTnst5RWAYWAf'
+consumer_key = 'Mybajfn101lgqYBrAqgS1upyr'
+consumer_secret = '6BQphNQEYlqQuPnKryJ9wwoh7F7pFIrnzDJdX5fWnVIwYBydEl'
+access_token = '970426124512632832-Gf9mVAExwU5Bt1vtDfpXbhWR1iNKgwb'
+access_secret = 'meJmXkIe33n2gW6JQxikic6MJTo2L6UIkxWXrXfP84fuS'
 
 auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
@@ -29,8 +29,8 @@ with open('tfidfmodel.pickle', 'rb') as f:
 with open('classifier_svm.pickle', 'rb') as f:
     clf = pickle.load(f)
 
-parkname = 'Van Cortlandt Park'
-location = [-73.9057641969, 40.8814179494, -73.8689885307, 40.9112746603]
+parkname = 'Bronx Park'
+location = [-73.8837856795, 40.8417750476, -73.8705677534, 40.8691708974]
 keywords = {'workout': ['workout', 'running', 'walking', 'run', 'parkrun', 'jog', 'jogging', 'walk', 'walking', 'ride',
                         'cycling'],
             'socializing': ['relax', 'relaxing', 'meditation', 'reading', 'lunch', 'chill', 'mindfulness', 'yoga'],

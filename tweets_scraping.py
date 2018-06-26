@@ -6,10 +6,10 @@ import re
 import pickle
 import pymysql.cursors
 
-consumer_key = 'XbVQ5q2dG72dlEicthv6zCaU8B'
-consumer_secret = 'DKcOptyFqRNeRXEU2zycjOAdxMRVWr28MfbjNsCYAIlarY4pVmX'
-access_token = 'X970426124512632832-I4xlYipBghLUAu6tGbZqNgL8zWrwxD6'
-access_secret = 'E4jbd80Exh9il5n4nYcpSxNoUmJgc3fuW61ADNF36SxgbX'
+consumer_key = 'bVQ5q2dG72dlEicthv6zCaU8B'
+consumer_secret = 'DKcOptyFqRNeRXEU2zycjOAdxMRVWr28MfbjNsCYAIlarY4pVm'
+access_token = '970426124512632832-I4xlYipBghLUAu6tGbZqNgL8zWrwxD6'
+access_secret = 'E4jbd80Exh9il5n4nYcpSxNoUmJgc3fuW61ADNF36Sxgb'
 
 auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
@@ -52,9 +52,10 @@ class MyStreamListener(tweepy.StreamListener):
                 print(keyword)
                 try:
                     x.execute(
-                        """INSERT INTO tweets(text, date, sentiment, parkname, location, keyword)
-                              VALUES (%s,%s,%s,%s,%s,%s)""",
-                        (tweet, str(status.created_at), int(self.predict(tweet)), parkname, str(location), keyword))
+                        """INSERT INTO tweets(tweet, text, date, sentiment, parkname, location, keyword)
+                              VALUES (%s,%s,%s,%s,%s,%s,%s)""",
+                        (status.text, tweet, str(status.created_at), int(self.predict(tweet)), parkname, str(location),
+                         keyword))
                     conn.commit()
                 except:
                     conn.rollback()
@@ -62,7 +63,6 @@ class MyStreamListener(tweepy.StreamListener):
     def on_error(self, status_code):
         if status_code == 420:
             return False
-
 
     def preprocess(self, tweet):
         tweet = re.sub(r"^https://t.co/[a-zA-Z0-9]*\s", " ", tweet)
